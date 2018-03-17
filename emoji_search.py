@@ -9,16 +9,6 @@ import numpy as np
 import io
 
 
-root_directory = '/Users/benjaminlucas/Documents/EmojiSearch/'
-corpus_file = root_directory + 
-[unicode_rep, emoji_description] = Get_Emoji_Data(root_directory)
-[word_dict, word_mat] = LoadWordVecs(root_directory, 10000)
-
-emoji_mat = GenerateEmojiMat(emoji_description, word_dict, word_mat)
-
-emoji_inds = FindEmoji('experiment', emoji_mat)
-print('option 1: ' + emoji_description[emoji_inds[0]] + '\noption 2:' + emoji_description[emoji_inds[1]] + '\noption 3:' + emoji_description[emoji_inds[2]])
-
 def LoadWordVecs(corpus_file, n_words = 10000):
     data = LoadWordVecRaw(n_words, corpus_file)
     word_mat = np.zeros([len(data), 300])
@@ -108,3 +98,13 @@ def Get_Emoji_Data(root_directory):
             description.append(description_section_text)
     return [unicode_rep, description]
 
+root_directory = '/Users/benjaminlucas/Documents/EmojiSearch/'
+corpus_file = root_directory + 'crawl-300d-2M.vec'
+[unicode_rep, emoji_description] = Get_Emoji_Data(root_directory)
+[word_dict, word_mat] = LoadWordVecs(root_directory, 10000)
+
+emoji_mat = GenerateEmojiMat(emoji_description, word_dict, word_mat)
+
+test_phrase = 'experiment'
+emoji_inds = FindEmoji(test_phrase, emoji_mat)
+print('Search phrase: "' + test_phrase + '"\n' + 'option 1: ' + emoji_description[emoji_inds[0]] + '\noption 2:' + emoji_description[emoji_inds[1]] + '\noption 3:' + emoji_description[emoji_inds[2]])
