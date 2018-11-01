@@ -8,3 +8,5 @@ I have also restricted the semantic space to only include the 10000 most common 
 
 You will need to edit lines 101 and 102 of 'emoji_search.py' to match your local directory information.
 
+If you would just like to get a sense of the flavor of what this accomplishes, you can run a [prototype javascript version](http://www.highdimensionalcoconuts.com/Projects/EmojiSearch/basic_search.html).
+
