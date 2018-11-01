@@ -64,13 +64,17 @@ function ProcessSearchPhrase(search_phrase)
 
 function MakePhraseVec(search_phrase)
 {
-  processed_words = ProcessSearchPhrase(search_phrase);
-  word_inds = [];
+  var processed_words = ProcessSearchPhrase(search_phrase);
+  var word_inds = [];
   for(var i = 0; i < processed_words.length; i++)
   {
     try
    {
-     word_inds.push(word_dict[processed_words[i]])
+     var ind = word_dict[processed_words[i]];
+     if(typeof ind === 'number')
+     {
+       word_inds.push(ind);
+     }
    }
    catch(e){ }
   }
