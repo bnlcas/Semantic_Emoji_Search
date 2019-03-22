@@ -18,7 +18,7 @@ function InitializeSearch()
   //unicode_rep = JSON.parse(FileReader.readTextFile('unicode_rep.json'));
 }
 
-function FindEmoji(search_phrase, n_values = 3)
+function FindEmoji(search_phrase, n_values = 10)
 {
   var search_vector = MakePhraseVec(search_phrase);
   if(search_vector == -1)
