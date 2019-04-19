@@ -44,7 +44,7 @@ def GenerateEmojiMat(emoji_description, word_dict, word_mat):
 def IsStopWord(word):
     stop_words = ["\"", "\\", "/", ":", ";", "-", ",", "i", "me", "my", "myself", "we", "our", "ours", "ourselves", "you", "your", "yours", "yourself", "yourselves", "its", "itself", "what", "which", "who", "whom", "this", "that", "these", "am", "is", "are", "was", "were", "be", "been", "being", "have", "has", "had", "having", "do", "does", "did", "doing", "a", "an", "the", "and", "but", "if", "or", "because", "as", "until", "while", "of", "at", "by", "for", "with", "about", "against", "between", "into", "through", "during", "to", "so", "s", "t", "can", "will", "just", "don", "should", "now", "with",]
     return any(x == word for x in stop_words)
-    
+
 def MakePhraseVec(phrase, word_dict, word_mat):
     stop_chars = [':', ';', '-',',']
     for c in stop_chars:
@@ -66,7 +66,7 @@ def MakePhraseVec(phrase, word_dict, word_mat):
     else:
         print('no words found in: ' + phrase)
         return np.zeros([1,300])
-    
+
 
 def FindEmoji(search_phrase, emoji_mat):
     search_vector = MakePhraseVec(search_phrase, word_dict, word_mat)
@@ -81,7 +81,7 @@ def FindEmoji(search_phrase, emoji_mat):
 def Load_Emoji_Data(emoji_data_file):
     with open(emoji_data_file, 'r') as f:
         raw_txt_data = f.readlines()
-        
+
     raw_emoji_data = [x for x in raw_txt_data if(x[0] != '\n' and x[0] != '#')]
     unicode_rep = []
     hexidecimal_rep = []
@@ -94,7 +94,7 @@ def Load_Emoji_Data(emoji_data_file):
         while(i > 0 and unicode_section[i] == ' '):
             i -= 1
         unicode_rep_row = unicode_section[0:(i+1)]
-       
+
         if (len(row.split('#')[1]) > 1):
             description_section = row.split('#')[1]
         else:
@@ -102,21 +102,24 @@ def Load_Emoji_Data(emoji_data_file):
         hex_section = description_section.split(' ')[1]
         description_section_text = description_section.split(' ')[2:]
         description_section_text = ' '.join(description_section_text)
+
+
+
         remove_chars = ['\n', ';',':']
         for c in remove_chars:
             description_section_text = description_section_text.replace(c, '')
-        
-        if(description_section_text not in description):
+
+        # Add if not a duplicate of prior emoji, Remove Variational Emoji (Skin + Hair Color gives duplicates)
+        if(description_section_text not in description) and (":" not in description_section_text):
             hexidecimal_rep.append(hex_section)
             unicode_rep.append(unicode_rep_row)
             description.append(description_section_text)
     return [unicode_rep, hexidecimal_rep, description]
 
 
-def SetupEmojiSearch():
-    root_directory = '/Users/benjaminlucas/Documents/EmojiSearch/'
+def SetupEmojiSearch(root_directory):
     corpus_file = root_directory + 'Corpra/crawl-300d-2M.vec'
-    emoji_data_file = root_directory + 'emoji-test-edit.txt'
+    emoji_data_file = root_directory + 'emoji-test.txt'
     #'Corpra/glove.42B.300d.txt'
     # 'Corpra/wiki-news-300d-1M.vec'
     [unicode_rep, hexidecimal_rep, emoji_description] = Load_Emoji_Data(emoji_data_file)
@@ -125,16 +128,17 @@ def SetupEmojiSearch():
     [word_dict, word_mat] = LoadWordVecs(corpus_file, 20000)
     return [emoji_mat, word_dict, word_mat, unicode_rep, hexidecimal_rep, emoji_description]
 
-    
+
 
 def SerializeData():
     MathJS_Serializer.SerializeMathJS_MatrixJSON(emoji_mat, 'emoji_mat_data.js')
     MathJS_Serializer.SerializeMathJS_MatrixJSON(word_mat, 'word_mat_data.js')
     MathJS_Serializer.SerializeJS_Dictionary(word_dict, 'word_dict.js')
-    MathJS_Serializer.SerializeJS_List(map(lambda x: "\\u{" + x +"}", unicode_rep), 'unicode_rep.js')
+    MathJS_Serializer.SerializeJS_List(["\\u{" + x +"}" for x in unicode_rep], 'unicode_rep.js')
     MathJS_Serializer.SerializeJS_List(hexidecimal_rep, 'hexidecimal_rep.js')
-    
-[emoji_mat, word_dict, word_mat, unicode_rep, hexidecimal_rep, emoji_description] = SetupEmojiSearch()
+
+root_directory = '/Users/benlucas/Documents/Semantic_Emoji_Search'
+[emoji_mat, word_dict, word_mat, unicode_rep, hexidecimal_rep, emoji_description] = SetupEmojiSearch(root_directory)
 
 
 test_phrase = 'time'
