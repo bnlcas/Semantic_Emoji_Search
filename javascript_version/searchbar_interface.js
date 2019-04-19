@@ -5,6 +5,7 @@ var outputDisplay;
 
 var search_term;
 
+
 function start()
 {
 	entryField = document.getElementById("textInput");
@@ -37,10 +38,10 @@ $(document).ready(function () {
 
 function SearchEmoji()
 {
-	inputDisplay.innerHTML = "Search: " + search_term;
-	outputDisplay.innerHTML = "Suggestions: ";
+	inputDisplay.innerText = "Search: " + search_term;
+	outputDisplay.innerText = "Suggestions: ";
 	entryField.value = "";
 	var suggestions = FindEmoji(search_term);
-	outputDisplay.innerHTML = "Suggestions: " + suggestions.reduce((acc, x) => acc + "  " +  x);
+	outputDisplay.innerText = "Suggestions: " + suggestions.reduce((acc, x) => acc + "  " +  x);
 	search_term = "";
 }

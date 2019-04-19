@@ -35,7 +35,7 @@ function FindEmoji(search_phrase, n_values = 10)
     for(var i = 0; i < n_values; i++)
     {
       var target_ind = similarity_arr.indexOf(similarity_sorted[i]);
-      suggestions.push(hexidecimal_rep[target_ind]);
+      suggestions.push(unicode_rep[target_ind].toString(16));
     }
     return suggestions;
   }
@@ -54,10 +54,10 @@ function ProcessSearchPhrase(search_phrase)
   search_words_filtered = [];
   for(var i = 0; i < search_words.length; i ++)
   {
-    if(!stop_words.includes(search_words[i]) && search_words[i].length > 1)
-    {
+    //if(!stop_words.includes(search_words[i]) && search_words[i].length > 1)
+    //{
       search_words_filtered.push(search_words[i]);
-    }
+    //}
   }
   return search_words_filtered;
 }

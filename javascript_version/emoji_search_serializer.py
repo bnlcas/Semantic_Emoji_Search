@@ -77,44 +77,41 @@ def FindEmoji(search_phrase, emoji_mat):
 
 
 
-
 def Load_Emoji_Data(emoji_data_file):
-    with open(emoji_data_file, 'r') as f:
-        raw_txt_data = f.readlines()
-
-    raw_emoji_data = [x for x in raw_txt_data if(x[0] != '\n' and x[0] != '#')]
-    unicode_rep = []
-    hexidecimal_rep = []
-    description = []
-    k = -1
+    unicode_reps = []
+    hexidecimal_reps = []
+    descriptions = []
     for row in raw_emoji_data:
-        k += 1
-        unicode_section = row.split(';')[0]
-        i = len(unicode_section) - 1
-        while(i > 0 and unicode_section[i] == ' '):
-            i -= 1
-        unicode_rep_row = unicode_section[0:(i+1)]
-
-        if (len(row.split('#')[1]) > 1):
-            description_section = row.split('#')[1]
+        sections = row.split(';')
+        # Get Unicode:
+        if(len(sections) > 0):
+            unicode_section = sections[0].strip()
+            description_section = sections[1].strip()
         else:
-            description_section = row.split('#')[2]
-        hex_section = description_section.split(' ')[1]
-        description_section_text = description_section.split(' ')[2:]
-        description_section_text = ' '.join(description_section_text)
+            continue
+        description = description_section.split('#')
 
+        # Get Description
+        if(len(description) > 0):
+            description = description[1]
+        else:
+            continue
 
+        description_components = description.split(' ')
+        if(len(description_components[1]) == 1):
+            hexidecimal_rep = description_components[1]
+            description = ' '.join(description_components[2:])
+        else:
+            continue
 
-        remove_chars = ['\n', ';',':']
+        remove_chars = ['\n', ';',':', '-']
         for c in remove_chars:
-            description_section_text = description_section_text.replace(c, '')
+            description = description.replace(c, ' ')
+        hexidecimal_reps.append(hexidecimal_rep)
+        unicode_reps.append(unicode_section)
+        descriptions.append(description)
+    return [unicode_reps, hexidecimal_reps, descriptions]
 
-        # Add if not a duplicate of prior emoji, Remove Variational Emoji (Skin + Hair Color gives duplicates)
-        if(description_section_text not in description) and (":" not in description_section_text):
-            hexidecimal_rep.append(hex_section)
-            unicode_rep.append(unicode_rep_row)
-            description.append(description_section_text)
-    return [unicode_rep, hexidecimal_rep, description]
 
 
 def SetupEmojiSearch(root_directory):
