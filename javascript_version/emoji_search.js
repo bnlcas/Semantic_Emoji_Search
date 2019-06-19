@@ -35,7 +35,7 @@ function FindEmoji(search_phrase, n_values = 10)
     for(var i = 0; i < n_values; i++)
     {
       var target_ind = similarity_arr.indexOf(similarity_sorted[i]);
-      suggestions.push(unicode_rep[target_ind].toString(16));
+      suggestions.push(unicode_rep[target_ind]);
     }
     return suggestions;
   }
