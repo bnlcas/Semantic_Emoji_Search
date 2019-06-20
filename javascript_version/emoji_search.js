@@ -23,7 +23,7 @@ function FindEmoji(search_phrase, n_values = 10)
   var search_vector = MakePhraseVec(search_phrase);
   if(search_vector == -1)
   {
-    return ['\u{1F600}'];
+      return ['\u{2753}', '\u{1F937}', '\u{2753}'];
   }
   else {
     var similarity = math.multiply(emoji_mat, math.transpose(search_vector));
@@ -52,13 +52,12 @@ function ProcessSearchPhrase(search_phrase)
 
   search_words = search_phrase.split(' ');
   search_words_filtered = [];
+
   for(var i = 0; i < search_words.length; i ++)
   {
-    //if(!stop_words.includes(search_words[i]) && search_words[i].length > 1)
-    //{
       search_words_filtered.push(search_words[i]);
-    //}
   }
+
   return search_words_filtered;
 }
 
